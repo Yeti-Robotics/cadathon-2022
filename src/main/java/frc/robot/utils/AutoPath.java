@@ -2,7 +2,9 @@ package frc.robot.utils;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPRamseteCommand;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -14,7 +16,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 public class AutoPath {
     private final DrivetrainSubsystem drivetrainSubsystem;
     private PathPlannerTrajectory trajectory;
-    private PPSwerveControllerCommand swerveControllerCommand;
+    private PPRamseteCommand swerveControllerCommand;
     private double startVel = 0.0;
     private double endVel = 0.0;
     private double maxVel = AutoConstants.MAX_VELOCITY;
@@ -37,14 +39,12 @@ public class AutoPath {
     }
 
     private void generateAutoPathCommand() {
-        swerveControllerCommand = new PPSwerveControllerCommand(
+        swerveControllerCommand = new PPRamseteCommand(
             trajectory,
             drivetrainSubsystem::getPose,
-            DriveConstants.DRIVE_KINEMATICS,
-            drivetrainSubsystem.getxController(),
-            drivetrainSubsystem.getyController(),
-            drivetrainSubsystem.getThetaController(),
-            drivetrainSubsystem::setDesiredStates,
+            AutoConstants.RAMSETE_CONTROLLER,
+            AutoConstants.KINEMATICS,
+            drivetrainSubsystem::tankDriveVolts,
             drivetrainSubsystem);
     }
 

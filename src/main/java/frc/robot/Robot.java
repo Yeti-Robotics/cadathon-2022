@@ -24,8 +24,10 @@ public class Robot extends TimedRobot
     private RobotContainer robotContainer;
 
     public enum AutoModes {
+        AUTO_ONE
     }
     private AutoBuilder autoBuilder;
+    private Command autoCommand;
 
     
     /**
@@ -38,6 +40,11 @@ public class Robot extends TimedRobot
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
         robotContainer = new RobotContainer();
+        autoBuilder = new AutoBuilder();
+
+        autoBuilder.setRobotContainer(robotContainer);
+        autoBuilder.setAutoMode(AutoModes.AUTO_ONE);
+        autoCommand = autoBuilder.build();
     }
     
     
@@ -72,12 +79,10 @@ public class Robot extends TimedRobot
     @Override
     public void autonomousInit()
     {
-        autonomousCommand = robotContainer.getAutonomousCommand();
-        
         // schedule the autonomous command (example)
-        if (autonomousCommand != null)
+        if (autoCommand != null)
         {
-            autonomousCommand.schedule();
+            autoCommand.schedule();
         }
     }
     

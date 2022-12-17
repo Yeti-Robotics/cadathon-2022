@@ -5,6 +5,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
@@ -54,6 +56,33 @@ public final class Constants {
                 WHEEL_CIRCUMFERENCE_M / (TalonFXConstants.ENCODER_RESOLUTION * HIGH_GEAR_RATIO); // 0.0000246613
         public static final double DISTANCE_PER_PULSE_LOW_GEAR =
                 WHEEL_CIRCUMFERENCE_M / (TalonFXConstants.ENCODER_RESOLUTION * LOW_GEAR_RATIO);
+    }
+
+    public static final class AutoConstants {
+        /**
+         * Max velocity in meters per second
+         */
+        public static final double MAX_VELOCITY = 5.0;
+        /**
+         * Max acceleration in meters per second squared
+         */
+        public static final double MAX_ACCEL = 8.0;
+
+        public static final double AUTO_KS = 0.800699;
+        public static final double AUTO_KV = 1.9414;
+        public static final double AUTO_KA = 0.55335;
+        public static final double AUTO_P = 2.9854;
+
+        public static final double TRACK_WIDTH = 0.80692;
+        public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
+
+        public static final double RAMSETE_B = 2.0;
+        public static final double RAMSETE_ZETA = 0.7;
+        public static final RamseteController RAMSETE_CONTROLLER = new RamseteController(RAMSETE_B, RAMSETE_ZETA);
+
+        public static final double X_CONTROLLER_P = 2.9;
+        public static final double Y_CONTROLLER_P = 2.9;
+        public static final double THETA_CONTROLLER_P = 3.0;
     }
 
     public static final class TalonFXConstants {

@@ -25,7 +25,7 @@ public class RobotContainer {
     private final ControllerContainer controllerContainer;
     private final ButtonHelper buttonHelper;
 
-    private final DrivetrainSubsystem drivetrainSubsystem;
+    public final DrivetrainSubsystem drivetrainSubsystem;
     public RobotContainer()
     {
         controllerContainer = new ControllerContainer();

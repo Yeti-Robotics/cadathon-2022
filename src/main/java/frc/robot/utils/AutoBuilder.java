@@ -16,6 +16,8 @@ public class AutoBuilder {
         autoCommand = new SequentialCommandGroup();
 
         switch (autoMode) {
+            case AUTO_ONE:
+                break;
         }
 
         autoCommand.beforeStarting(new InstantCommand(() -> robotContainer.drivetrainSubsystem.resetOdometer(startPath.getInitPose())));
