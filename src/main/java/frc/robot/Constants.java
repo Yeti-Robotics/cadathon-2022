@@ -43,8 +43,8 @@ public final class Constants {
 
         public static final int[] SOLENOID_SHIFTER = {0, 1};
 
-        public static final double HIGH_GEAR_RATIO = 6.32; // jvn
-        public static final double LOW_GEAR_RATIO = 11.90; // jvn
+        public static final double HIGH_GEAR_RATIO = 5.47; // jvn
+        public static final double LOW_GEAR_RATIO = 16.09; // jvn
 
         public static final double WHEEL_DIAMETER_IN = 4.0;
         public static final double WHEEL_DIAMETER_M = Units.inchesToMeters(WHEEL_DIAMETER_IN);  // 0.1016
@@ -53,7 +53,7 @@ public final class Constants {
         public static final double DISTANCE_PER_PULSE_HIGH_GEAR =
                 WHEEL_CIRCUMFERENCE_M / (TalonFXConstants.ENCODER_RESOLUTION * HIGH_GEAR_RATIO); // 0.0000246613
         public static final double DISTANCE_PER_PULSE_LOW_GEAR =
-                WHEEL_CIRCUMFERENCE_M / (TalonFXConstants.ENCODER_RESOLUTION * HIGH_GEAR_RATIO);
+                WHEEL_CIRCUMFERENCE_M / (TalonFXConstants.ENCODER_RESOLUTION * LOW_GEAR_RATIO);
     }
 
     public static final class TalonFXConstants {
