@@ -8,9 +8,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
-
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.utils.controller.ButtonHelper;
+import frc.robot.utils.controller.ControllerContainer;
+import frc.robot.utils.controller.MultiButton;
 
 
 /**
@@ -19,18 +21,19 @@ import frc.robot.subsystems.ExampleSubsystem;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
-public class RobotContainer
-{
-    // The robot's subsystems and commands are defined here...
-    private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-    
-    private final ExampleCommand autoCommand = new ExampleCommand(exampleSubsystem);
-    
-    
-    /** The container for the robot. Contains subsystems, OI devices, and commands. */
+public class RobotContainer {
+    private final ControllerContainer controllerContainer;
+    private final ButtonHelper buttonHelper;
+
+    private final DrivetrainSubsystem drivetrainSubsystem;
     public RobotContainer()
     {
-        // Configure the button bindings
+        controllerContainer = new ControllerContainer();
+        buttonHelper = new ButtonHelper(controllerContainer.getControllers());
+
+        drivetrainSubsystem = new DrivetrainSubsystem(controllerContainer.get(0));
+        drivetrainSubsystem.setDriveMode(DrivetrainSubsystem.DriveMode.CHEEZY);
+
         configureButtonBindings();
     }
     
@@ -43,8 +46,8 @@ public class RobotContainer
      */
     private void configureButtonBindings()
     {
-        // Add button to command mappings here.
-        // See https://docs.wpilib.org/en/stable/docs/software/commandbased/binding-commands-to-triggers.html
+        buttonHelper.setController(0);
+        buttonHelper.createButton(11, 0, new InstantCommand(drivetrainSubsystem::toggleShifter), MultiButton.RunCondition.WHEN_PRESSED);
     }
     
     
@@ -56,6 +59,7 @@ public class RobotContainer
     public Command getAutonomousCommand()
     {
         // An ExampleCommand will run in autonomous
+        Command autoCommand = null;
         return autoCommand;
     }
 }
