@@ -19,12 +19,8 @@ import frc.robot.utils.controller.Controller;
 
 public class DrivetrainSubsystem extends SubsystemBase {
 
-    private final WPI_TalonFX leftFalcon1;
-    private final WPI_TalonFX leftFalcon2;
-    private final WPI_TalonFX rightFalcon1;
-    private final WPI_TalonFX rightFalcon2;
-    private final MotorControllerGroup leftMotors;
-    private final MotorControllerGroup rightMotors;
+    private final WPI_TalonFX leftMotor1, leftMotor2, rightMotor1, rightMotor2;
+    private final MotorControllerGroup leftMotors, rightMotors;
 
     private final AHRS gyro;
 
@@ -41,34 +37,34 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     private NeutralMode neutralMode;
 
-    private final DoubleSolenoid shifter;
+    private final DoubleSolenoid shifterPiston;
 
     private final Controller controller;
 
     public DrivetrainSubsystem(Controller controller) {
-        leftFalcon1 = new WPI_TalonFX(DrivetrainConstants.LEFT_FALCON_1);
-        leftFalcon2 = new WPI_TalonFX(DrivetrainConstants.LEFT_FALCON_2);
-        rightFalcon1 = new WPI_TalonFX(DrivetrainConstants.RIGHT_FALCON_1);
-        rightFalcon2 = new WPI_TalonFX(DrivetrainConstants.RIGHT_FALCON_2);
+        leftMotor1 = new WPI_TalonFX(DrivetrainConstants.LEFT_FALCON_1);
+        leftMotor2 = new WPI_TalonFX(DrivetrainConstants.LEFT_FALCON_2);
+        rightMotor1 = new WPI_TalonFX(DrivetrainConstants.RIGHT_FALCON_1);
+        rightMotor2 = new WPI_TalonFX(DrivetrainConstants.RIGHT_FALCON_2);
 
-        leftFalcon1.configVoltageCompSaturation(Constants.MOTOR_VOLTAGE_COMP);
-        leftFalcon2.configVoltageCompSaturation(Constants.MOTOR_VOLTAGE_COMP);
-        rightFalcon1.configVoltageCompSaturation(Constants.MOTOR_VOLTAGE_COMP);
-        rightFalcon2.configVoltageCompSaturation(Constants.MOTOR_VOLTAGE_COMP);
+        leftMotor1.configVoltageCompSaturation(Constants.MOTOR_VOLTAGE_COMP);
+        leftMotor2.configVoltageCompSaturation(Constants.MOTOR_VOLTAGE_COMP);
+        rightMotor1.configVoltageCompSaturation(Constants.MOTOR_VOLTAGE_COMP);
+        rightMotor2.configVoltageCompSaturation(Constants.MOTOR_VOLTAGE_COMP);
 
-        leftFalcon1.enableVoltageCompensation(true);
-        leftFalcon2.enableVoltageCompensation(true);
-        rightFalcon1.enableVoltageCompensation(true);
-        rightFalcon2.enableVoltageCompensation(true);
+        leftMotor1.enableVoltageCompensation(true);
+        leftMotor2.enableVoltageCompensation(true);
+        rightMotor1.enableVoltageCompensation(true);
+        rightMotor2.enableVoltageCompensation(true);
 
-        leftMotors = new MotorControllerGroup(leftFalcon1, leftFalcon2);
-        rightMotors = new MotorControllerGroup(rightFalcon1, rightFalcon2);
+        leftMotors = new MotorControllerGroup(leftMotor1, leftMotor2);
+        rightMotors = new MotorControllerGroup(rightMotor1, rightMotor2);
         rightMotors.setInverted(true);
         leftMotors.setInverted(true);
         setMotorsBrake();
 
-        leftFalcon1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
-        rightFalcon1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
+        leftMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
+        rightMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
         resetEncoders();
 
         gyro = new AHRS(Port.kUSB);
@@ -81,7 +77,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
 
-        shifter = new DoubleSolenoid(Constants.PneumaticConstants.deviceType, DrivetrainConstants.SOLENOID_SHIFTER[0], DrivetrainConstants.SOLENOID_SHIFTER[1]);
+        shifterPiston = new DoubleSolenoid(Constants.PneumaticConstants.deviceType, DrivetrainConstants.SOLENOID_SHIFTER[0], DrivetrainConstants.SOLENOID_SHIFTER[1]);
         shiftUp();
 
         this.controller = controller;
@@ -134,31 +130,31 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     public void setMotorsBrake() {
-        leftFalcon1.setNeutralMode(NeutralMode.Brake);
-        leftFalcon2.setNeutralMode(NeutralMode.Brake);
-        rightFalcon1.setNeutralMode(NeutralMode.Brake);
-        rightFalcon2.setNeutralMode(NeutralMode.Brake);
+        leftMotor1.setNeutralMode(NeutralMode.Brake);
+        leftMotor2.setNeutralMode(NeutralMode.Brake);
+        rightMotor1.setNeutralMode(NeutralMode.Brake);
+        rightMotor2.setNeutralMode(NeutralMode.Brake);
         neutralMode = NeutralMode.Brake;
     }
 
     public void setMotorsCoast() {
-        leftFalcon1.setNeutralMode(NeutralMode.Coast);
-        leftFalcon2.setNeutralMode(NeutralMode.Coast);
-        rightFalcon1.setNeutralMode(NeutralMode.Coast);
-        rightFalcon2.setNeutralMode(NeutralMode.Coast);
+        leftMotor1.setNeutralMode(NeutralMode.Coast);
+        leftMotor2.setNeutralMode(NeutralMode.Coast);
+        rightMotor1.setNeutralMode(NeutralMode.Coast);
+        rightMotor2.setNeutralMode(NeutralMode.Coast);
         neutralMode = NeutralMode.Coast;
     }
 
     // Distance in meters
     public double getLeftEncoderDistance() {
-        return leftFalcon1.getSelectedSensorPosition()
+        return leftMotor1.getSelectedSensorPosition()
                 * (getShifterPosition() == DoubleSolenoid.Value.kForward
                 ? DrivetrainConstants.DISTANCE_PER_PULSE_HIGH_GEAR
                 : DrivetrainConstants.DISTANCE_PER_PULSE_LOW_GEAR);
     }
 
     public double getRightEncoderDistance() {
-        return -rightFalcon1.getSelectedSensorPosition()
+        return -rightMotor1.getSelectedSensorPosition()
                 * (getShifterPosition() == DoubleSolenoid.Value.kForward
                 ? DrivetrainConstants.DISTANCE_PER_PULSE_HIGH_GEAR
                 : DrivetrainConstants.DISTANCE_PER_PULSE_LOW_GEAR);
@@ -169,20 +165,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     public void resetEncoders() {
-        leftFalcon1.setSelectedSensorPosition(0.0);
-        rightFalcon1.setSelectedSensorPosition(0.0);
+        leftMotor1.setSelectedSensorPosition(0.0);
+        rightMotor1.setSelectedSensorPosition(0.0);
     }
 
     // Velocity in meters/second
     public double getLeftEncoderVelocity() {
-        return (leftFalcon1.getSelectedSensorVelocity() * 10)
+        return (leftMotor1.getSelectedSensorVelocity() * 10)
                 * (getShifterPosition() == DoubleSolenoid.Value.kForward
                 ? DrivetrainConstants.DISTANCE_PER_PULSE_HIGH_GEAR
                 : DrivetrainConstants.DISTANCE_PER_PULSE_LOW_GEAR);
     }
 
     public double getRightEncoderVelocity() {
-        return (-rightFalcon1.getSelectedSensorVelocity() * 10)
+        return (-rightMotor1.getSelectedSensorVelocity() * 10)
                 * (getShifterPosition() == DoubleSolenoid.Value.kForward
                 ? DrivetrainConstants.DISTANCE_PER_PULSE_HIGH_GEAR
                 : DrivetrainConstants.DISTANCE_PER_PULSE_LOW_GEAR);
@@ -193,19 +189,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     public void toggleShifter() {
-        shifter.toggle();
+        shifterPiston.toggle();
     }
 
     public void shiftUp() {
-        shifter.set(DoubleSolenoid.Value.kForward);
+        shifterPiston.set(DoubleSolenoid.Value.kForward);
     }
 
     public void shiftDown() {
-        shifter.set(DoubleSolenoid.Value.kReverse);
+        shifterPiston.set(DoubleSolenoid.Value.kReverse);
     }
 
     public DoubleSolenoid.Value getShifterPosition() {
-        return shifter.get();
+        return shifterPiston.get();
     }
     public double getHeading() {
         return gyro.getRotation2d().getDegrees();
@@ -216,7 +212,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(getLeftEncoderVelocity(), getRightEncoderVelocity());
+        wheelSpeeds.leftMetersPerSecond = getLeftEncoderVelocity();
+        wheelSpeeds.rightMetersPerSecond = getRightEncoderVelocity();
+        return wheelSpeeds;
     }
 
     public Pose2d getPose() {
