@@ -5,6 +5,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -83,6 +85,25 @@ public final class Constants {
         public static final double X_CONTROLLER_P = 2.9;
         public static final double Y_CONTROLLER_P = 2.9;
         public static final double THETA_CONTROLLER_P = 3.0;
+    }
+
+    public static final class ShooterConstants {
+        public static final int LEFT_MOTOR = 5;
+        public static final int RIGHT_MOTOR = 6;
+        public static final SupplyCurrentLimitConfiguration SUPPLY_CURRENT_LIMIT_CONFIGURATION =
+                new SupplyCurrentLimitConfiguration(true, 40, 50, 0.3);
+        public static final StatorCurrentLimitConfiguration STATOR_CURRENT_LIMIT_CONFIGURATION =
+                new StatorCurrentLimitConfiguration(true, 40, 50, 0.3);
+
+        public static final double FLYWHEEL_KP = 1.0;
+        public static final double FLYWHEEL_KI = 1.0;
+        public static final double FLYWHEEL_KD = 1.0;
+
+
+
+        public static final int[] SOLENOID_CLAW = {2, 4};
+
+        public static final int CUBE_SENSOR = 0;
     }
 
     public static final class TalonFXConstants {
