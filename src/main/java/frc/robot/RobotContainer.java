@@ -6,10 +6,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.subsystems.DriveTrainSubsystem;
+
+
 
 
 
@@ -21,17 +24,17 @@ import frc.robot.subsystems.ExampleSubsystem;
  */
 public class RobotContainer
 {
-    // The robot's subsystems and commands are defined here...
-    private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-    
-    private final ExampleCommand autoCommand = new ExampleCommand(exampleSubsystem);
+    public Joystick joystick;
+    public DriveTrainSubsystem driveTrainSubsystem;
     
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer()
     {
-        // Configure the button bindings
+        joystick = new Joystick(0);
+        driveTrainSubsystem = new DriveTrainSubsystem();
         configureButtonBindings();
+        driveTrainSubsystem.setDefaultCommand(new RunCommand(() -> driveTrainSubsystem.drive(-joystick.getRawAxis(0), -joystick.getRawAxis(2)), driveTrainSubsystem));
     }
     
     
@@ -55,7 +58,8 @@ public class RobotContainer
      */
     public Command getAutonomousCommand()
     {
+        return null;
         // An ExampleCommand will run in autonomous
-        return autoCommand;
+    
     }
 }
