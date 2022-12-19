@@ -8,9 +8,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.commands.AutoCommand;
+import frc.robot.commands.IntakeInCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 
 
@@ -26,6 +31,7 @@ public class RobotContainer
 {
     public Joystick joystick;
     public DriveTrainSubsystem driveTrainSubsystem;
+    public IntakeSubsystem intakeSubsystem;
     
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -33,6 +39,7 @@ public class RobotContainer
     {
         joystick = new Joystick(0);
         driveTrainSubsystem = new DriveTrainSubsystem();
+        intakeSubsystem = new IntakeSubsystem();
         configureButtonBindings();
         driveTrainSubsystem.setDefaultCommand(new RunCommand(() -> driveTrainSubsystem.drive(-joystick.getRawAxis(0), -joystick.getRawAxis(2)), driveTrainSubsystem));
     }
@@ -46,8 +53,6 @@ public class RobotContainer
      */
     private void configureButtonBindings()
     {
-        // Add button to command mappings here.
-        // See https://docs.wpilib.org/en/stable/docs/software/commandbased/binding-commands-to-triggers.html
     }
     
     
@@ -58,8 +63,7 @@ public class RobotContainer
      */
     public Command getAutonomousCommand()
     {
-        return null;
-        // An ExampleCommand will run in autonomous
+    return new AutoCommand(driveTrainSubsystem);
     
     }
 }
