@@ -82,10 +82,6 @@ public final class Constants {
         public static final double RAMSETE_B = 2.0;
         public static final double RAMSETE_ZETA = 0.7;
         public static final RamseteController RAMSETE_CONTROLLER = new RamseteController(RAMSETE_B, RAMSETE_ZETA);
-
-        public static final double X_CONTROLLER_P = 2.9;
-        public static final double Y_CONTROLLER_P = 2.9;
-        public static final double THETA_CONTROLLER_P = 3.0;
     }
 
     public static final class ShooterConstants {
@@ -102,22 +98,31 @@ public final class Constants {
         /*
          * kV and kA values calculated from https://www.reca.lc/flywheel?currentLimit=%7B%22s%22%3A40%2C%22u%22%3A%22A%22%7D&efficiency=85&flywheelMomentOfInertia=%7B%22s%22%3A0%2C%22u%22%3A%22in2%2Albs%22%7D&flywheelRadius=%7B%22s%22%3A0%2C%22u%22%3A%22in%22%7D&flywheelRatio=%7B%22magnitude%22%3A1%2C%22ratioType%22%3A%22Reduction%22%7D&flywheelWeight=%7B%22s%22%3A1.5%2C%22u%22%3A%22lbs%22%7D&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Falcon%20500%22%7D&motorRatio=%7B%22magnitude%22%3A1.3333333333333333%2C%22ratioType%22%3A%22Step-up%22%7D&projectileRadius=%7B%22s%22%3A2%2C%22u%22%3A%22in%22%7D&projectileWeight=%7B%22s%22%3A1.5%2C%22u%22%3A%22kg%22%7D&shooterMomentOfInertia=%7B%22s%22%3A8%2C%22u%22%3A%22in2%2Albs%22%7D&shooterRadius=%7B%22s%22%3A4%2C%22u%22%3A%22in%22%7D&shooterTargetSpeed=%7B%22s%22%3A4000%2C%22u%22%3A%22rpm%22%7D&shooterWeight=%7B%22s%22%3A1%2C%22u%22%3A%22lbs%22%7D&useCustomFlywheelMoi=1&useCustomShooterMoi=0
          */
-        public static final double FLYWHEEL_KS = 0.63;
-        public static final double FLYWHEEL_KV = 0.13;
-        public static final double FLYWHEEL_KA = 0.0;
+        public static final double FLYWHEEL_KS = 0.063; // Volts
+        public static final double FLYWHEEL_KV = 0.013; // Volts * 100ms / Meter
+        public static final double FLYWHEEL_KA = 0.0; // Volts * 100ms^2 / Meter
         public static final double FLYWHEEL_ACCEL = 4.0; // m/s
 
-        public static final double FLYWHEEL_GEAR_RATIO = 48 / 36; // motor to output (1 : 1.33...)
-        public static final double FLYWHEEL_DIAMETER_IN = 4;
+        public static final double FLYWHEEL_GEAR_RATIO = 48.0 / 36.0; // motor to output (1 : 1.33...)
+        public static final double FLYWHEEL_DIAMETER_IN = 4.0;
         public static final double FLYWHEEL_DIAMETER_M = Units.inchesToMeters(FLYWHEEL_DIAMETER_IN); // 0.1016
         public static final double FLYWHEEL_CIRCUMFERENCE_M = FLYWHEEL_DIAMETER_M * Math.PI;
         public static final double METER_PER_PULSE =
-                FLYWHEEL_CIRCUMFERENCE_M * FLYWHEEL_GEAR_RATIO / TalonFXConstants.ENCODER_RESOLUTION; // 0.0000246613
-        public static final double PULSE_PER_METER = 1 / METER_PER_PULSE;
+                FLYWHEEL_CIRCUMFERENCE_M * FLYWHEEL_GEAR_RATIO / TalonFXConstants.ENCODER_RESOLUTION;
+        public static final double PULSE_PER_METER = 1.0 / METER_PER_PULSE;
 
-        public static final int[] SOLENOID_CLAW = {2, 4};
+        public static final int[] SOLENOID_CLAW = {2, 3};
+        public static final int[] SOLENOID_PIVOT = {4, 5};
 
         public static final int CUBE_SENSOR = 0;
+
+        /*
+            All speeds are in meters / second
+         */
+        public static final double MAX_SPEED = 28.0;
+        public static final double INTAKE_SPEED = 8.0;
+        public static final double SWITCH_SHOT_SPEED = 15.0;
+        public static final double SCALE_SHOT_SPEED = 23.0;
     }
 
     public static final class TalonFXConstants {

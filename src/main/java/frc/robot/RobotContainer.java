@@ -7,12 +7,17 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import frc.robot.commands.IntakeCubeCommand;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.utils.controller.ButtonHelper;
 import frc.robot.utils.controller.ControllerContainer;
-import frc.robot.utils.controller.MultiButton;
+import frc.robot.utils.controller.MultiButton.RunCondition;
+import frc.robot.Constants.ShooterConstants;
 
 
 /**
@@ -26,6 +31,7 @@ public class RobotContainer {
     private final ButtonHelper buttonHelper;
 
     public final DrivetrainSubsystem drivetrainSubsystem;
+    public final ClawSubsystem clawSubsystem;
     public RobotContainer()
     {
         controllerContainer = new ControllerContainer();
@@ -33,6 +39,7 @@ public class RobotContainer {
 
         drivetrainSubsystem = new DrivetrainSubsystem(controllerContainer.get(0));
         drivetrainSubsystem.setDriveMode(DrivetrainSubsystem.DriveMode.CHEEZY);
+        clawSubsystem = new ClawSubsystem();
 
         configureButtonBindings();
     }
@@ -47,7 +54,24 @@ public class RobotContainer {
     private void configureButtonBindings()
     {
         buttonHelper.setController(0);
-        buttonHelper.createButton(11, 0, new InstantCommand(drivetrainSubsystem::toggleShifter), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(11, 0, new InstantCommand(drivetrainSubsystem::toggleShifter), RunCondition.WHEN_PRESSED);
+
+        buttonHelper.createButton(12, 0, new InstantCommand(clawSubsystem::togglePivot), RunCondition.WHEN_PRESSED);
+
+        buttonHelper.createButton(1, 0, new IntakeCubeCommand(clawSubsystem), RunCondition.WHILE_HELD);
+        buttonHelper.createButton(6, 0,
+                new StartEndCommand(
+                () -> clawSubsystem.spinFlywheel(-Constants.ShooterConstants.INTAKE_SPEED), clawSubsystem::stopFlywheel, clawSubsystem),
+                RunCondition.WHILE_HELD);
+
+        buttonHelper.createButton(2, 0,
+                new InstantCommand(() -> clawSubsystem.spinFlywheel(ShooterConstants.SCALE_SHOT_SPEED), clawSubsystem),
+                RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(3, 0,
+                new InstantCommand(() -> clawSubsystem.spinFlywheel(ShooterConstants.SWITCH_SHOT_SPEED), clawSubsystem),
+                RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(7, 0, new InstantCommand(clawSubsystem::stopFlywheel), RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(8, 0, new InstantCommand(clawSubsystem::stopFlywheel), RunCondition.WHEN_PRESSED);
     }
     
     
