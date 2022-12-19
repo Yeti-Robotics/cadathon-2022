@@ -1,18 +1,18 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
 public class ElevatorSubsystem extends SubsystemBase {
-	private final WPI_TalonFX leftMotor = new WPI_TalonFX(ElevatorConstants.LEFT_MOTOR_PORT);
-	private final WPI_TalonFX rightMotor = new WPI_TalonFX(ElevatorConstants.RIGHT_MOTOR_PORT);
+	private final CANSparkMax leftMotor = new CANSparkMax(ElevatorConstants.LEFT_MOTOR_PORT, MotorType.kBrushless);
+	private final CANSparkMax rightMotor = new CANSparkMax(ElevatorConstants.RIGHT_MOTOR_PORT, MotorType.kBrushless);
 
 	public ElevatorSubsystem() {
 		leftMotor.follow(rightMotor);
-		leftMotor.setInverted(InvertType.OpposeMaster);
+		leftMotor.setInverted(true);
 	}
 
 	public void moveUp() {

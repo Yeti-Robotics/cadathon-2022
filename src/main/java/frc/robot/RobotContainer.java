@@ -12,8 +12,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.IOConstants;
+import frc.robot.commands.claw.CloseClaw;
+import frc.robot.commands.claw.IntakeClaw;
+import frc.robot.commands.claw.OpenClaw;
+import frc.robot.commands.claw.ShootClaw;
 import frc.robot.commands.elevator.MoveElevatorDown;
 import frc.robot.commands.elevator.MoveElevatorUp;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 
@@ -31,6 +36,7 @@ public class RobotContainer {
     public final Joystick joystick = new Joystick(IOConstants.JOYSTICK_PORT);
     public final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+    public final ClawSubsystem clawSubsystem = new ClawSubsystem();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -55,6 +61,10 @@ public class RobotContainer {
     private void configureButtonBindings() {
         this.setJoystickButtonWhileHeld(0, new MoveElevatorUp(elevatorSubsystem));
         this.setJoystickButtonWhileHeld(1, new MoveElevatorDown(elevatorSubsystem));
+        this.setJoystickButtonWhenPressed(2, new OpenClaw(clawSubsystem));
+        this.setJoystickButtonWhenPressed(3, new CloseClaw(clawSubsystem));
+        this.setJoystickButtonWhileHeld(4, new IntakeClaw(clawSubsystem));
+        this.setJoystickButtonWhileHeld(5, new ShootClaw(clawSubsystem));
     }
 
     private double getLeftY() {
