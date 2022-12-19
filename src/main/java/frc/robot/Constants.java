@@ -28,6 +28,14 @@ public final class Constants {
 		public static final int LEFT_MOTOR_3_PORT = 5;
 	}
 
+	public static final class ElevatorConstants {
+		public static final int LEFT_MOTOR_PORT = 6;
+
+		public static final int RIGHT_MOTOR_PORT = 6;
+		
+		public static final double ELEVATOR_SPEED = 0.3;
+	}
+
 	public static final class IOConstants {
 		public static final int JOYSTICK_PORT = 0;
 	}

@@ -12,7 +12,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.IOConstants;
+import frc.robot.commands.elevator.MoveElevatorDown;
+import frc.robot.commands.elevator.MoveElevatorUp;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -27,13 +30,15 @@ public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     public final Joystick joystick = new Joystick(IOConstants.JOYSTICK_PORT);
     public final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
+    public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
         drivetrainSubsystem.setDefaultCommand(
-                new RunCommand(() -> drivetrainSubsystem.cheesyDrive(this.getLeftY(), this.getRightX()), drivetrainSubsystem));
+                new RunCommand(() -> drivetrainSubsystem.cheesyDrive(this.getLeftY(), this.getRightX()),
+                        drivetrainSubsystem));
 
         // Configure the button bindings
         this.configureButtonBindings();
@@ -48,9 +53,8 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        // Add button to command mappings here.
-        // See
-        // https://docs.wpilib.org/en/stable/docs/software/commandbased/binding-commands-to-triggers.html
+        this.setJoystickButtonWhileHeld(0, new MoveElevatorUp(elevatorSubsystem));
+        this.setJoystickButtonWhileHeld(1, new MoveElevatorDown(elevatorSubsystem));
     }
 
     private double getLeftY() {
@@ -83,7 +87,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // An ExampleCommand will run in autonomous
-        return null;
+        // GOes forward at full speed for three seconds 😈
+        return new RunCommand(() -> drivetrainSubsystem.cheesyDrive(1, 0), drivetrainSubsystem).withTimeout(3);
     }
 }
