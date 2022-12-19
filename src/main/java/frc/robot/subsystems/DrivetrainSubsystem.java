@@ -23,9 +23,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	public DrivetrainSubsystem() {
 		rightMotors.setInverted(true);
 		leftMotors.setInverted(false);
+
+		drive.setDeadband(0.05);
 	}
 
 	public void cheesyDrive(double straight, double turn) {
-		this.drive.curvatureDrive(straight, -turn, true);
+		drive.curvatureDrive(straight, -turn, true);
+	}
+
+	public void stop() {
+		drive.stopMotor();
 	}
 }
