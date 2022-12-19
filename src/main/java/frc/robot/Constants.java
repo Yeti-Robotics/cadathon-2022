@@ -92,15 +92,15 @@ public final class Constants {
         public static final StatorCurrentLimitConfiguration STATOR_CURRENT_LIMIT_CONFIGURATION =
                 new StatorCurrentLimitConfiguration(true, 40, 50, 0.3);
 
-        public static final double FLYWHEEL_KP = 1.0;
-        public static final double FLYWHEEL_KI = 1.0;
-        public static final double FLYWHEEL_KD = 1.0;
+        public static final double FLYWHEEL_KP = 0.25;
+        public static final double FLYWHEEL_KI = 0.0;
+        public static final double FLYWHEEL_KD = 0.0;
         /*
          * kV and kA values calculated from https://www.reca.lc/flywheel?currentLimit=%7B%22s%22%3A40%2C%22u%22%3A%22A%22%7D&efficiency=85&flywheelMomentOfInertia=%7B%22s%22%3A0%2C%22u%22%3A%22in2%2Albs%22%7D&flywheelRadius=%7B%22s%22%3A0%2C%22u%22%3A%22in%22%7D&flywheelRatio=%7B%22magnitude%22%3A1%2C%22ratioType%22%3A%22Reduction%22%7D&flywheelWeight=%7B%22s%22%3A1.5%2C%22u%22%3A%22lbs%22%7D&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Falcon%20500%22%7D&motorRatio=%7B%22magnitude%22%3A1.3333333333333333%2C%22ratioType%22%3A%22Step-up%22%7D&projectileRadius=%7B%22s%22%3A2%2C%22u%22%3A%22in%22%7D&projectileWeight=%7B%22s%22%3A1.5%2C%22u%22%3A%22kg%22%7D&shooterMomentOfInertia=%7B%22s%22%3A8%2C%22u%22%3A%22in2%2Albs%22%7D&shooterRadius=%7B%22s%22%3A4%2C%22u%22%3A%22in%22%7D&shooterTargetSpeed=%7B%22s%22%3A4000%2C%22u%22%3A%22rpm%22%7D&shooterWeight=%7B%22s%22%3A1%2C%22u%22%3A%22lbs%22%7D&useCustomFlywheelMoi=1&useCustomShooterMoi=0
          */
-        public static final double FLYWHEEL_KS = 0.063; // Volts
-        public static final double FLYWHEEL_KV = 0.013; // Volts * 100ms / Meter
-        public static final double FLYWHEEL_KA = 0.0; // Volts * 100ms^2 / Meter
+        public static final double FLYWHEEL_KS = 0.43; // Volts
+        public static final double FLYWHEEL_KV = 0.13; // Volts * s / Meter
+        public static final double FLYWHEEL_KA = 0.0; // Volts * s^2 / Meter
         public static final double FLYWHEEL_ACCEL = 4.0; // m/s
 
         public static final double FLYWHEEL_GEAR_RATIO = 48.0 / 36.0; // motor to output (1 : 1.33...)
@@ -125,6 +125,15 @@ public final class Constants {
         public static final double SCALE_SHOT_SPEED = 23.0;
     }
 
+    public static final class ClimberConstants {
+        public static final int CLIMBER_MOTOR = 7;
+
+        public static final double CLIMBER_SPEED = 0.7;
+
+        public static final int FORWARD_LIMIT = 10000;
+        public static final int REVERSE_LIMIT = 0;
+    }
+
     public static final class TalonFXConstants {
         public static final int ENCODER_RESOLUTION = 2048;
 
@@ -140,7 +149,7 @@ public final class Constants {
          * Dimensions of the game pieces in inches
          * { Width x Length x Height }
          */
-        public static final double[] CUBE_DIMENSIONS = { 13, 13, 11};
+        public static final double[] CUBE_DIMENSIONS = { 13, 13, 11 };
         /**
          * Weight of game piece in kilograms
          */

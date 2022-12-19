@@ -12,9 +12,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.commands.IntakeCubeCommand;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.utils.controller.ButtonHelper;
 import frc.robot.utils.controller.ControllerContainer;
+import frc.robot.utils.controller.MultiButton;
 import frc.robot.utils.controller.MultiButton.RunCondition;
 import frc.robot.Constants.ShooterConstants;
 
@@ -31,6 +33,8 @@ public class RobotContainer {
 
     public final DrivetrainSubsystem drivetrainSubsystem;
     public final ClawSubsystem clawSubsystem;
+    public final ClimberSubsystem climberSubsystem;
+
     public RobotContainer()
     {
         controllerContainer = new ControllerContainer();
@@ -39,6 +43,7 @@ public class RobotContainer {
         drivetrainSubsystem = new DrivetrainSubsystem(controllerContainer.get(0));
         drivetrainSubsystem.setDriveMode(DrivetrainSubsystem.DriveMode.CHEEZY);
         clawSubsystem = new ClawSubsystem();
+        climberSubsystem = new ClimberSubsystem();
 
         configureButtonBindings();
     }
@@ -71,6 +76,23 @@ public class RobotContainer {
                 RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(7, 0, new InstantCommand(clawSubsystem::stopFlywheel), RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(8, 0, new InstantCommand(clawSubsystem::stopFlywheel), RunCondition.WHEN_PRESSED);
+
+        buttonHelper.createButton(1, 1,
+                new StartEndCommand(climberSubsystem::climbDown, climberSubsystem::stopClimb, climberSubsystem),
+                RunCondition.WHILE_HELD);
+        buttonHelper.createButton(6, 1,
+                new StartEndCommand(climberSubsystem::climbUp, climberSubsystem::stopClimb, climberSubsystem),
+                RunCondition.WHILE_HELD);
+
+        buttonHelper.createButton(10, 0,
+                new InstantCommand(() -> {
+                    if (MultiButton.syncLayer == 1) {
+                        buttonHelper.setAllLayers(0);
+                        return;
+                    }
+                    buttonHelper.setAllLayers(1);
+                }),
+                RunCondition.WHEN_PRESSED);
     }
     
     
