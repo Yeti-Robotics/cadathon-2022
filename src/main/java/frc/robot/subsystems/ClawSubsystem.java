@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.sun.jdi.ShortType;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -12,13 +14,17 @@ import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.PneumaticConstants;
 
+import javax.xml.crypto.KeySelector;
+
 public class ClawSubsystem extends SubsystemBase {
     private final WPI_TalonFX leftMotor, rightMotor;
-    private final MotorControllerGroup motors;
+    private final SimpleMotorFeedforward flywheelFF;
 
     private final DoubleSolenoid clawPiston;
 
     private final DigitalInput cubeSensor;
+
+    private boolean isSpinning = false;
     public ClawSubsystem() {
         leftMotor = new WPI_TalonFX(ShooterConstants.LEFT_MOTOR);
         rightMotor = new WPI_TalonFX(ShooterConstants.RIGHT_MOTOR);
@@ -54,17 +60,52 @@ public class ClawSubsystem extends SubsystemBase {
         rightMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 250);
         rightMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 250);
 
-        motors = new MotorControllerGroup(leftMotor, rightMotor);
-
-        clawPiston = new DoubleSolenoid(PneumaticConstants.deviceType, ShooterConstants.SOLENOID_CLAW[0], ShooterConstants.SOLENOID_CLAW[1]);
+        flywheelFF = new SimpleMotorFeedforward(
+                ShooterConstants.FLYWHEEL_KS, ShooterConstants.FLYWHEEL_KV, ShooterConstants.FLYWHEEL_KA);
+        clawPiston = new DoubleSolenoid(
+                PneumaticConstants.deviceType, ShooterConstants.SOLENOID_CLAW[0], ShooterConstants.SOLENOID_CLAW[1]);
 
         cubeSensor = new DigitalInput(ShooterConstants.CUBE_SENSOR);
     }
 
-    public void spinFlywheel(double power) {
-        leftMotor.set(ControlMode.Velocity, );
+    @Override
+    public void periodic() {
     }
 
+    public void spinFlywheel(double speed) {
+        isSpinning = true;
+        leftMotor.config_kF(0,
+                flywheelFF.calculate(speed, ShooterConstants.FLYWHEEL_ACCEL) * ShooterConstants.PULSE_PER_METER);
+        leftMotor.set(ControlMode.Velocity, speed * ShooterConstants.PULSE_PER_METER);
+    }
 
+    public void stopFlywheel() {
+        isSpinning = false;
+        leftMotor.stopMotor();
+    }
+
+    public boolean getIsFlywheelSpinning() {
+        return isSpinning;
+    }
+
+    public boolean isCubeInClaw() {
+        return cubeSensor.get();
+    }
+
+    public void toggleClaw() {
+        clawPiston.toggle();
+    }
+
+    public void closeClaw() {
+        clawPiston.set(DoubleSolenoid.Value.kReverse);
+    }
+
+    public void openClaw() {
+        clawPiston.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public DoubleSolenoid.Value getClawPosition() {
+        return clawPiston.get();
+    }
 }
 

@@ -7,6 +7,7 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -47,8 +48,8 @@ public final class Constants {
 
         public static final int[] SOLENOID_SHIFTER = {0, 1};
 
-        public static final double HIGH_GEAR_RATIO = 5.47; // jvn
-        public static final double LOW_GEAR_RATIO = 16.09; // jvn
+        public static final double HIGH_GEAR_RATIO = 5.47; // motor to output (5.47 : 1)
+        public static final double LOW_GEAR_RATIO = 16.09; // motor to output (16.09 : 1)
 
         public static final double WHEEL_DIAMETER_IN = 4.0;
         public static final double WHEEL_DIAMETER_M = Units.inchesToMeters(WHEEL_DIAMETER_IN);  // 0.1016
@@ -98,8 +99,21 @@ public final class Constants {
         public static final double FLYWHEEL_KP = 1.0;
         public static final double FLYWHEEL_KI = 1.0;
         public static final double FLYWHEEL_KD = 1.0;
+        /*
+         * kV and kA values calculated from https://www.reca.lc/flywheel?currentLimit=%7B%22s%22%3A40%2C%22u%22%3A%22A%22%7D&efficiency=85&flywheelMomentOfInertia=%7B%22s%22%3A0%2C%22u%22%3A%22in2%2Albs%22%7D&flywheelRadius=%7B%22s%22%3A0%2C%22u%22%3A%22in%22%7D&flywheelRatio=%7B%22magnitude%22%3A1%2C%22ratioType%22%3A%22Reduction%22%7D&flywheelWeight=%7B%22s%22%3A1.5%2C%22u%22%3A%22lbs%22%7D&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Falcon%20500%22%7D&motorRatio=%7B%22magnitude%22%3A1.3333333333333333%2C%22ratioType%22%3A%22Step-up%22%7D&projectileRadius=%7B%22s%22%3A2%2C%22u%22%3A%22in%22%7D&projectileWeight=%7B%22s%22%3A1.5%2C%22u%22%3A%22kg%22%7D&shooterMomentOfInertia=%7B%22s%22%3A8%2C%22u%22%3A%22in2%2Albs%22%7D&shooterRadius=%7B%22s%22%3A4%2C%22u%22%3A%22in%22%7D&shooterTargetSpeed=%7B%22s%22%3A4000%2C%22u%22%3A%22rpm%22%7D&shooterWeight=%7B%22s%22%3A1%2C%22u%22%3A%22lbs%22%7D&useCustomFlywheelMoi=1&useCustomShooterMoi=0
+         */
+        public static final double FLYWHEEL_KS = 0.63;
+        public static final double FLYWHEEL_KV = 0.13;
+        public static final double FLYWHEEL_KA = 0.0;
+        public static final double FLYWHEEL_ACCEL = 4.0; // m/s
 
-
+        public static final double FLYWHEEL_GEAR_RATIO = 48 / 36; // motor to output (1 : 1.33...)
+        public static final double FLYWHEEL_DIAMETER_IN = 4;
+        public static final double FLYWHEEL_DIAMETER_M = Units.inchesToMeters(FLYWHEEL_DIAMETER_IN); // 0.1016
+        public static final double FLYWHEEL_CIRCUMFERENCE_M = FLYWHEEL_DIAMETER_M * Math.PI;
+        public static final double METER_PER_PULSE =
+                FLYWHEEL_CIRCUMFERENCE_M * FLYWHEEL_GEAR_RATIO / TalonFXConstants.ENCODER_RESOLUTION; // 0.0000246613
+        public static final double PULSE_PER_METER = 1 / METER_PER_PULSE;
 
         public static final int[] SOLENOID_CLAW = {2, 4};
 
@@ -114,6 +128,18 @@ public final class Constants {
 
     public static final class PneumaticConstants {
         public static final PneumaticsModuleType deviceType = PneumaticsModuleType.CTREPCM;
+    }
+
+    public static final class GameConstants {
+        /**
+         * Dimensions of the game pieces in inches
+         * { Width x Length x Height }
+         */
+        public static final double[] CUBE_DIMENSIONS = { 13, 13, 11};
+        /**
+         * Weight of game piece in kilograms
+         */
+        public static final double CUBE_WEIGHT = 1.5;
     }
 }
 
