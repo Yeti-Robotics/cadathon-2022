@@ -9,7 +9,7 @@ import java.util.function.BiConsumer;
 
 public class MultiButton {
     private static boolean isLayersSynced;
-    private static int syncLayer;
+    public static int syncLayer;
     private final Button button;
     private final byte buttonID;
     private BiConsumer<Boolean, Boolean>[] buttonActions;
@@ -54,7 +54,7 @@ public class MultiButton {
 
     public void updateButton() {
         if (isLayersSynced) {
-            buttonLayer = syncLayer;
+            setAllButtonLayer();
         }
         pressed = button.get();
         buttonActions[buttonLayer].accept(pressed, pressedLast);
@@ -67,7 +67,11 @@ public class MultiButton {
 
     public void setButtonLayer(int layer) {
         isLayersSynced = false;
-        buttonLayer = layer % buttonActions.length;
+        buttonLayer = layer % layerCount;
+    }
+
+    public void setAllButtonLayer() {
+        buttonLayer = syncLayer % layerCount;
     }
 
     public byte getButtonID() {
