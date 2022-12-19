@@ -4,9 +4,17 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
+  CANSparkMax leftIntakeSparkMax;
+  CANSparkMax rightIntakeSparkMax;
+  DoubleSolenoid leftIntakePiston1;
+
+
   
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {}
