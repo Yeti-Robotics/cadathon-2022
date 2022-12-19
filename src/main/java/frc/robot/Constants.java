@@ -83,6 +83,8 @@ public final class Constants {
         public static final double RAMSETE_B = 2.0;
         public static final double RAMSETE_ZETA = 0.7;
         public static final RamseteController RAMSETE_CONTROLLER = new RamseteController(RAMSETE_B, RAMSETE_ZETA);
+
+        public static final String pathOne = "pathOne";
     }
 
     public static final class ShooterConstants {
