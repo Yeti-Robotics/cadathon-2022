@@ -16,7 +16,7 @@ public class IntakeCubeCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        clawSubsystem.spinFlywheel(Constants.ShooterConstants.INTAKE_SPEED);
+        clawSubsystem.setFlywheelSetpoint(Constants.ShooterConstants.INTAKE_SPEED);
     }
 
     @Override

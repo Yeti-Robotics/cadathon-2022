@@ -7,7 +7,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -61,14 +60,14 @@ public class RobotContainer {
         buttonHelper.createButton(1, 0, new IntakeCubeCommand(clawSubsystem), RunCondition.WHILE_HELD);
         buttonHelper.createButton(6, 0,
                 new StartEndCommand(
-                () -> clawSubsystem.spinFlywheel(-Constants.ShooterConstants.INTAKE_SPEED), clawSubsystem::stopFlywheel, clawSubsystem),
+                () -> clawSubsystem.setFlywheelSetpoint(-Constants.ShooterConstants.INTAKE_SPEED), clawSubsystem::stopFlywheel, clawSubsystem),
                 RunCondition.WHILE_HELD);
 
         buttonHelper.createButton(2, 0,
-                new InstantCommand(() -> clawSubsystem.spinFlywheel(ShooterConstants.SCALE_SHOT_SPEED), clawSubsystem),
+                new InstantCommand(() -> clawSubsystem.setFlywheelSetpoint(ShooterConstants.SCALE_SHOT_SPEED), clawSubsystem),
                 RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(3, 0,
-                new InstantCommand(() -> clawSubsystem.spinFlywheel(ShooterConstants.SWITCH_SHOT_SPEED), clawSubsystem),
+                new InstantCommand(() -> clawSubsystem.setFlywheelSetpoint(ShooterConstants.SWITCH_SHOT_SPEED), clawSubsystem),
                 RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(7, 0, new InstantCommand(clawSubsystem::stopFlywheel), RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(8, 0, new InstantCommand(clawSubsystem::stopFlywheel), RunCondition.WHEN_PRESSED);
