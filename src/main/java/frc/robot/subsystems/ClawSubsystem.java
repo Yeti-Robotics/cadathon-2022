@@ -21,6 +21,7 @@ public class ClawSubsystem extends SubsystemBase {
     private final SimpleMotorFeedforward flywheelFF;
 
     private final DoubleSolenoid clawPiston;
+    private final DoubleSolenoid pivotPiston;
 
     private final DigitalInput cubeSensor;
 
@@ -62,10 +63,16 @@ public class ClawSubsystem extends SubsystemBase {
 
         flywheelFF = new SimpleMotorFeedforward(
                 ShooterConstants.FLYWHEEL_KS, ShooterConstants.FLYWHEEL_KV, ShooterConstants.FLYWHEEL_KA);
+
         clawPiston = new DoubleSolenoid(
                 PneumaticConstants.deviceType, ShooterConstants.SOLENOID_CLAW[0], ShooterConstants.SOLENOID_CLAW[1]);
+        pivotPiston = new DoubleSolenoid(
+                PneumaticConstants.deviceType, ShooterConstants.SOLENOID_PIVOT[0], ShooterConstants.SOLENOID_PIVOT[1]);
 
         cubeSensor = new DigitalInput(ShooterConstants.CUBE_SENSOR);
+
+        closeClaw();
+        liftClaw();
     }
 
     @Override
@@ -74,6 +81,10 @@ public class ClawSubsystem extends SubsystemBase {
 
     public void spinFlywheel(double speed) {
         isSpinning = true;
+        if (speed > ShooterConstants.MAX_SPEED) {
+            speed = ShooterConstants.MAX_SPEED;
+        }
+        speed = speed / 10; // convert from seconds to 100ms
         leftMotor.config_kF(0,
                 flywheelFF.calculate(speed, ShooterConstants.FLYWHEEL_ACCEL) * ShooterConstants.PULSE_PER_METER);
         leftMotor.set(ControlMode.Velocity, speed * ShooterConstants.PULSE_PER_METER);
@@ -106,6 +117,22 @@ public class ClawSubsystem extends SubsystemBase {
 
     public DoubleSolenoid.Value getClawPosition() {
         return clawPiston.get();
+    }
+
+    public void togglePivot() {
+        pivotPiston.toggle();
+    }
+
+    public void liftClaw() {
+        pivotPiston.set(DoubleSolenoid.Value.kReverse);
+    }
+
+    public void dropClaw() {
+        pivotPiston.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public DoubleSolenoid.Value getPivotPosition() {
+        return pivotPiston.get();
     }
 }
 
