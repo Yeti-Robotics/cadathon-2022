@@ -5,6 +5,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import edu.wpi.first.math.MathUtil;
@@ -87,6 +88,7 @@ public final class Constants {
     public static final class ShooterConstants {
         public static final int LEFT_MOTOR = 5;
         public static final int RIGHT_MOTOR = 6;
+        public static final int PIVOT_MOTOR = 8;
         public static final SupplyCurrentLimitConfiguration SUPPLY_CURRENT_LIMIT_CONFIGURATION =
                 new SupplyCurrentLimitConfiguration(true, 40, 50, 0.3);
         public static final StatorCurrentLimitConfiguration STATOR_CURRENT_LIMIT_CONFIGURATION =
@@ -103,13 +105,29 @@ public final class Constants {
         public static final double FLYWHEEL_KA = 0.0; // Volts * s^2 / Meter
         public static final double FLYWHEEL_ACCEL = 4.0; // m/s
 
-        public static final double FLYWHEEL_GEAR_RATIO = 48.0 / 36.0; // motor to output (1 : 1.33...)
+        public static final double FLYWHEEL_GEAR_RATIO = 2; // motor to output (2 : 1...)
         public static final double FLYWHEEL_DIAMETER_IN = 4.0;
         public static final double FLYWHEEL_DIAMETER_M = Units.inchesToMeters(FLYWHEEL_DIAMETER_IN); // 0.1016
         public static final double FLYWHEEL_CIRCUMFERENCE_M = FLYWHEEL_DIAMETER_M * Math.PI;
         public static final double METER_PER_PULSE =
                 FLYWHEEL_CIRCUMFERENCE_M * FLYWHEEL_GEAR_RATIO / TalonFXConstants.ENCODER_RESOLUTION;
         public static final double PULSE_PER_METER = 1.0 / METER_PER_PULSE;
+
+        public static final int FORWARD_LIMIT = 100000;
+        public static final int REVERSE_LIMIT = 0;
+
+        public static final int STARTING_POSITION = 5;
+        public static final int SHOOTING_POSITION = 60000;
+        public static final int INTAKE_POSITION = 99995;
+
+        public static final int PIVOT_MAX_VEL = 7500;
+        public static final int PIVOT_MAX_ACCEL = 12000;
+        public static final int PIVOT_ACCEL_SMOOTHING = 3;
+
+        public static final double PIVOT_KF = 0.5;
+        public static final double PIVOT_KP = 2.0;
+        public static final double PIVOT_KI = 0.20;
+        public static final double PIVOT_KD = 0.25;
 
         public static final int[] SOLENOID_CLAW = {2, 3};
         public static final int[] SOLENOID_PIVOT = {4, 5};

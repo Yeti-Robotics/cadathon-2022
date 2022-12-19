@@ -60,7 +60,7 @@ public class RobotContainer {
         buttonHelper.setController(0);
         buttonHelper.createButton(11, 0, new InstantCommand(drivetrainSubsystem::toggleShifter), RunCondition.WHEN_PRESSED);
 
-        buttonHelper.createButton(12, 0, new InstantCommand(clawSubsystem::togglePivot), RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(12, 0, new InstantCommand(clawSubsystem::toggleClawPosition), RunCondition.WHEN_PRESSED);
 
         buttonHelper.createButton(1, 0, new IntakeCubeCommand(clawSubsystem), RunCondition.WHILE_HELD);
         buttonHelper.createButton(6, 0,

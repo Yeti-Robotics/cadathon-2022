@@ -13,12 +13,18 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.PneumaticConstants;
 
 public class ClawSubsystem extends SubsystemBase {
-    private final WPI_TalonFX leftMotor, rightMotor;
+    private final WPI_TalonFX leftMotor, rightMotor, pivotMotor;
     private final SimpleMotorFeedforward flywheelFF;
     private final PIDController flywheelPID;
 
+    public enum ClawPositions {
+        START,
+        SHOOTING,
+        INTAKING
+    }
+    private ClawPositions clawPosition;
+
     private final DoubleSolenoid clawPiston;
-    private final DoubleSolenoid pivotPiston;
 
     private final DigitalInput cubeSensor;
 
@@ -27,6 +33,7 @@ public class ClawSubsystem extends SubsystemBase {
     public ClawSubsystem() {
         leftMotor = new WPI_TalonFX(ShooterConstants.LEFT_MOTOR);
         rightMotor = new WPI_TalonFX(ShooterConstants.RIGHT_MOTOR);
+        pivotMotor = new WPI_TalonFX(ShooterConstants.PIVOT_MOTOR);
 
         leftMotor.setInverted(false);
         rightMotor.follow(leftMotor);
@@ -36,17 +43,37 @@ public class ClawSubsystem extends SubsystemBase {
         leftMotor.configStatorCurrentLimit(ShooterConstants.STATOR_CURRENT_LIMIT_CONFIGURATION);
         rightMotor.configSupplyCurrentLimit(ShooterConstants.SUPPLY_CURRENT_LIMIT_CONFIGURATION);
         rightMotor.configStatorCurrentLimit(ShooterConstants.STATOR_CURRENT_LIMIT_CONFIGURATION);
+        pivotMotor.configSupplyCurrentLimit(ShooterConstants.SUPPLY_CURRENT_LIMIT_CONFIGURATION);
+        pivotMotor.configStatorCurrentLimit(ShooterConstants.STATOR_CURRENT_LIMIT_CONFIGURATION);
 
         leftMotor.setNeutralMode(NeutralMode.Coast);
         rightMotor.setNeutralMode(NeutralMode.Coast);
+        pivotMotor.setNeutralMode(NeutralMode.Brake);
 
         leftMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
         rightMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
+        pivotMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
 
         leftMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 250);
         leftMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20);
         rightMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 250);
         rightMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 250);
+        pivotMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 250);
+        pivotMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20);
+
+
+        pivotMotor.configForwardSoftLimitThreshold(ShooterConstants.FORWARD_LIMIT);
+        pivotMotor.configReverseSoftLimitThreshold(ShooterConstants.REVERSE_LIMIT);
+        pivotMotor.configForwardSoftLimitEnable(true);
+        pivotMotor.configReverseSoftLimitEnable(true);
+
+        pivotMotor.configMotionCruiseVelocity(ShooterConstants.PIVOT_MAX_VEL);
+        pivotMotor.configMotionSCurveStrength(ShooterConstants.PIVOT_ACCEL_SMOOTHING);
+        pivotMotor.configMotionAcceleration(ShooterConstants.PIVOT_MAX_ACCEL);
+        pivotMotor.config_kF(0, ShooterConstants.PIVOT_KF);
+        pivotMotor.config_kP(0, ShooterConstants.PIVOT_KP);
+        pivotMotor.config_kI(0, ShooterConstants.PIVOT_KI);
+        pivotMotor.config_kD(0, ShooterConstants.PIVOT_KD);
 
         flywheelFF = new SimpleMotorFeedforward(
                 ShooterConstants.FLYWHEEL_KS, ShooterConstants.FLYWHEEL_KV, ShooterConstants.FLYWHEEL_KA);
@@ -55,13 +82,11 @@ public class ClawSubsystem extends SubsystemBase {
 
         clawPiston = new DoubleSolenoid(
                 PneumaticConstants.deviceType, ShooterConstants.SOLENOID_CLAW[0], ShooterConstants.SOLENOID_CLAW[1]);
-        pivotPiston = new DoubleSolenoid(
-                PneumaticConstants.deviceType, ShooterConstants.SOLENOID_PIVOT[0], ShooterConstants.SOLENOID_PIVOT[1]);
 
         cubeSensor = new DigitalInput(ShooterConstants.CUBE_SENSOR);
 
         closeClaw();
-        liftClaw();
+        clawPosition = ClawPositions.START;
     }
 
     @Override
@@ -114,20 +139,27 @@ public class ClawSubsystem extends SubsystemBase {
         return clawPiston.get();
     }
 
-    public void togglePivot() {
-        pivotPiston.toggle();
+    public void toggleClawPosition() {
+        if (clawPosition != ClawPositions.INTAKING) {
+            intakePositionClaw();
+        } else {
+            shootingPositionClaw();
+        }
     }
 
-    public void liftClaw() {
-        pivotPiston.set(DoubleSolenoid.Value.kReverse);
+    public void startingPositionClaw() {
+        clawPosition = ClawPositions.START;
+        pivotMotor.set(ControlMode.MotionMagic, ShooterConstants.STARTING_POSITION);
     }
 
-    public void dropClaw() {
-        pivotPiston.set(DoubleSolenoid.Value.kForward);
+    public void shootingPositionClaw() {
+        clawPosition = ClawPositions.SHOOTING;
+        pivotMotor.set(ControlMode.MotionMagic, ShooterConstants.SHOOTING_POSITION);
     }
 
-    public DoubleSolenoid.Value getPivotPosition() {
-        return pivotPiston.get();
+    public void intakePositionClaw() {
+        clawPosition = ClawPositions.INTAKING;
+        pivotMotor.set(ControlMode.MotionMagic, ShooterConstants.INTAKE_POSITION);
     }
 }
 
