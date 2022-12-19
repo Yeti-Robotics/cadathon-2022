@@ -22,4 +22,10 @@ public final class Constants {
         public static final int RIGHT_TALON_2 = 4;
         public static final int GYRO = 5;
     }
+
+    public static final class IntakeConstants {
+        public static final int[] INTAKE_PISTONS_SOLENOID = {0,1};
+        public static final int INTAKE_MOTOR_1 = 6;
+        public static final int INTAKE_MOTOR_2 = 7;
+    }
 }
