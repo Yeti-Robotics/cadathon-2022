@@ -32,11 +32,6 @@ public class ClawSubsystem extends SubsystemBase {
         rightMotor.follow(leftMotor);
         rightMotor.setInverted(InvertType.OpposeMaster);
 
-        leftMotor.configVoltageCompSaturation(Constants.MOTOR_VOLTAGE_COMP);
-        rightMotor.configVoltageCompSaturation(Constants.MOTOR_VOLTAGE_COMP);
-        leftMotor.enableVoltageCompensation(true);
-        rightMotor.enableVoltageCompensation(true);
-
         leftMotor.configSupplyCurrentLimit(ShooterConstants.SUPPLY_CURRENT_LIMIT_CONFIGURATION);
         leftMotor.configStatorCurrentLimit(ShooterConstants.STATOR_CURRENT_LIMIT_CONFIGURATION);
         rightMotor.configSupplyCurrentLimit(ShooterConstants.SUPPLY_CURRENT_LIMIT_CONFIGURATION);
